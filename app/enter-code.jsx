@@ -8,18 +8,20 @@ export default function EnterCodeScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Enter Recovery Code</Text>
-      <Text style={styles.subheader}>We have sent it check your email</Text>
-      
-      <TextInput 
-        placeholder="Enter code" 
-        style={styles.input}
-        keyboardType="number-pad"
-      />
-      
-      <Pressable style={styles.button} onPress={handleResetPassword}>
-        <Text style={styles.buttonText}>Reset Password</Text>
-      </Pressable>
+      <View style={styles.formContainer}>
+        <Text style={styles.header}>Enter Recovery Code</Text>
+        <Text style={styles.subheader}>We have sent it check your email</Text>
+        
+        <TextInput 
+          placeholder="Enter code" 
+          style={styles.input}
+          keyboardType="number-pad"
+        />
+        
+        <Pressable style={styles.button} onPress={handleResetPassword}>
+          <Text style={styles.buttonText}>Reset Password</Text>
+        </Pressable>
+      </View>
     </View>
   );
 }
@@ -28,8 +30,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    justifyContent: 'center',
     backgroundColor: '#F5FCFF',
+  },
+  formContainer: {
+    marginTop: 60,
   },
   header: {
     fontSize: 28,
@@ -40,7 +44,6 @@ const styles = StyleSheet.create({
   subheader: {
     marginBottom: 30,
     color: '#666',
-    textAlign: 'center',
   },
   input: {
     borderWidth: 1,
@@ -55,7 +58,7 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: '#0C97ED',
     padding: 15,
-    borderRadius: 8,
+    borderRadius: 10,
     alignItems: 'center',
   },
   buttonText: {

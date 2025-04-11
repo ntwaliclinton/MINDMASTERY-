@@ -14,8 +14,9 @@ export default function HomeScreen() {
       <Text style={styles.title}>MIND MASTERY</Text>
       <Text style={styles.subtitle}>The Best Productivity Mobile App</Text>
       
-      <Link href="/sign-up" asChild>
-        <Pressable style={styles.button}>
+      <Link href="/sign-in" asChild>
+        <Pressable style={styles.button}       
+        onPress={() => router.push('/sign-up')}>
           <Text style={styles.buttonText}>GET STARTED</Text>
         </Pressable>
       </Link>
@@ -32,8 +33,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5FCFF',
   },
   image: {
-    width: 200,
-    height: 200,
+    width: 400,
+    height: 400,
     marginBottom: 30,
   },
   title: {
@@ -52,8 +53,9 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: '#0C97ED',
     padding: 15,
-    borderRadius: 30,
-    width: 200,
+    borderRadius: 10,
+    width: 300,
+    marginBottom: 20,
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },

@@ -1,54 +1,63 @@
+import React from 'react';
 import { View, Text, TextInput, Pressable, StyleSheet } from 'react-native';
 import { Link, useRouter } from 'expo-router';
+import { app } from './firebaseConfig'; // Import your Firebase configuration
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'; // Import Firebase sign-in method
 
 export default function SignInScreen() {
   const router = useRouter();
+  const auth = getAuth(app); // Initialize Firebase Authentication
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const [error, setError] = React.useState(null);
 
-  const handleLogin = () => {
-    // Add your authentication logic here
-    router.replace('/(tabs)'); // Redirect to home after login
+  const handleLogin = async () => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      console.log('User signed in:', user);
+      router.replace('/homepage'); // Redirect to home after successful login
+    } catch (error) {
+      console.error('Error signing in:', error);
+      setError('Invalid email or password. Please try again.');
+    }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Welcome Back!</Text>
-      <Text style={styles.subheader}>Hello there, Login to Continue</Text>
-      
-      <TextInput 
-        placeholder="Username" 
-        style={styles.input}
-      />
-      <TextInput 
-        placeholder="Password" 
-        style={styles.input}
-        secureTextEntry
-      />
-      
-      <Pressable 
-        style={styles.forgotPassword} 
-        onPress={() => router.push('/email-recovery')}
-      >
-        <Text style={styles.link}>Forgot my password</Text>
-      </Pressable>
-      
-      <Pressable style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Login</Text>
-      </Pressable>
-      
-      <View style={styles.divider}>
-        <View style={styles.dividerLine} />
-        <Text style={styles.dividerText}>OR</Text>
-        <View style={styles.dividerLine} />
+      <View style={styles.formContainer}>
+        <Text style={styles.header}>Welcome Back!</Text>
+        <Text style={styles.subheader}>Hello there, Login to Continue</Text>
+
+        {error && <Text style={styles.errorText}>{error}</Text>}
+
+        <TextInput
+          placeholder="Email"
+          style={styles.input}
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+        />
+        <TextInput
+          placeholder="Password"
+          style={styles.input}
+          secureTextEntry
+          value={password}
+          onChangeText={setPassword}
+        />
+
+        <Pressable
+          style={styles.forgotPassword}
+          onPress={() => router.push('/email-recovery')}
+        >
+          <Text style={styles.link}>Forgot my password</Text>
+        </Pressable>
+
+        <Pressable style={styles.button} onPress={handleLogin}>
+          <Text style={styles.buttonText}>Login</Text>
+        </Pressable>
       </View>
-      
-      <Pressable style={styles.socialButton}>
-        <Text>Continue with Google</Text>
-      </Pressable>
-      
-      <Pressable style={styles.socialButton}>
-        <Text>Continue with Facebook</Text>
-      </Pressable>
-      
+
       <View style={styles.linkContainer}>
         <Text>Don't have an Account? </Text>
         <Link href="/sign-up" style={styles.link}>Signup</Link>
@@ -61,8 +70,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    justifyContent: 'center',
     backgroundColor: '#F5FCFF',
+  },
+  formContainer: {
+    marginTop: 60,
+    marginBottom: 20,
   },
   header: {
     fontSize: 28,
@@ -85,7 +97,7 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: '#0C97ED',
     padding: 15,
-    borderRadius: 8,
+    borderRadius: 10,
     alignItems: 'center',
     marginBottom: 20,
   },
@@ -102,32 +114,15 @@ const styles = StyleSheet.create({
     color: '#0C97ED',
     fontWeight: 'bold',
   },
-  divider: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  dividerLine: {
-    flex: 1,
-    height: 1,
-    backgroundColor: '#DDD',
-  },
-  dividerText: {
-    paddingHorizontal: 10,
-    color: '#666',
-  },
-  socialButton: {
-    borderWidth: 1,
-    borderColor: '#DDD',
-    padding: 15,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginBottom: 15,
-    backgroundColor: 'white',
-  },
   linkContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: 20,
+    marginTop: 'auto',
+    marginBottom: 30,
+  },
+  errorText: {
+    color: 'red',
+    marginBottom: 10,
+    textAlign: 'center',
   },
 });
