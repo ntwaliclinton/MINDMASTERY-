@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Pressable, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
-import { getAuth, fetchSignInMethodsForEmail } from 'firebase/auth'; // Import Firebase methods
+import { getAuth} from 'firebase/auth'; // Import Firebase methods
 import { app } from './firebaseConfig'; // Import your Firebase configuration
+import { sendPasswordResetEmail, fetchSignInMethodsForEmail } from "firebase/auth";
 
 export default function EmailRecoveryScreen() {
   const router = useRouter();
@@ -13,36 +14,30 @@ export default function EmailRecoveryScreen() {
 
   const handleSendLink = async () => {
     if (!email) {
-      setError('Please enter a valid email address.');
+      setError("Please enter a valid email address.");
       return;
     }
-
+  
+    const normalizedEmail = email.trim().toLowerCase();
+  
     try {
-      // Verify if the email exists in Firebase Authentication
-      const signInMethods = await fetchSignInMethodsForEmail(auth, email);
-      if (signInMethods.length === 0) {
-        setError('This email is not registered. Please check and try again.');
-        return;
-      }
+      console.log("Checking email:", normalizedEmail);
+  
+      await sendPasswordResetEmail(auth, normalizedEmail);
+      
+      setMessage("✅ If this email exists, a reset link has been sent.");
+      setError("");
 
-      // Generate a random 4-digit code
-      const recoveryCode = Math.floor(1000 + Math.random() * 9000).toString();
-
-      // Simulate sending the recovery code via email (replace this with your backend API call)
-      console.log(`Sending recovery code ${recoveryCode} to email: ${email}`);
-
-      // Store the recovery code in local storage or pass it to the next screen
-      localStorage.setItem('recoveryCode', recoveryCode);
-
-      setError('');
-      setMessage('Recovery code sent! Check your email.');
+      setMessage("✅ Password reset email sent! Check your inbox.");
+      setError("");
+  
       setTimeout(() => {
-        router.push('/enter-code'); // Navigate to the enter-code page
-      }, 2000);
+        router.push("/sign-in");
+      }, 3000);
     } catch (err) {
-      console.error('Error verifying email or sending recovery code:', err);
-      setError('Failed to send recovery code. Please try again.');
-      setMessage('');
+      console.error("Reset error:", err);
+      setError("Something went wrong. Try again later.");
+      setMessage("");
     }
   };
 

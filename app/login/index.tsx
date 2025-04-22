@@ -1,22 +1,23 @@
 import React from 'react';
 import { View, Text, TextInput, Pressable, StyleSheet } from 'react-native';
 import { Link, useRouter } from 'expo-router';
-import { app } from './firebaseConfig'; // Import your Firebase configuration
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'; // Import Firebase sign-in method
+//import { app } from '../../config/firebaseConfig';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 
 export default function SignInScreen() {
+
   const router = useRouter();
-  const auth = getAuth(app); // Initialize Firebase Authentication
+  //const auth = getAuth(app); // Initialize Firebase Authentication
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
-  const [error, setError] = React.useState(null);
+  const [error, setError] = React.useState("");
 
   const handleLogin = async () => {
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-      console.log('User signed in:', user);
-      router.replace('/homepage'); // Redirect to home after successful login
+     // const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      //const user = userCredential.user;
+      //console.log('User signed in:', user);
+      //router.replace('/homepage'); // Redirect to home after successful login
     } catch (error) {
       console.error('Error signing in:', error);
       setError('Invalid email or password. Please try again.');
@@ -48,7 +49,7 @@ export default function SignInScreen() {
 
         <Pressable
           style={styles.forgotPassword}
-          onPress={() => router.push('/email-recovery')}
+          onPress={() => router.push('/forgot-password')}
         >
           <Text style={styles.link}>Forgot my password</Text>
         </Pressable>

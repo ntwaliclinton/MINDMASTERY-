@@ -1,5 +1,5 @@
-import { View, Text, Image, Pressable, StyleSheet } from 'react-native';
 import { Link } from 'expo-router';
+import { Image, StyleSheet, Text, View } from 'react-native';
 
 export default function HomeScreen() {
   return (
@@ -14,11 +14,12 @@ export default function HomeScreen() {
       <Text style={styles.title}>MIND MASTERY</Text>
       <Text style={styles.subtitle}>The Best Productivity Mobile App</Text>
       
-      <Link href="/sign-in" asChild>
-        <Pressable style={styles.button}       
+      <Link href="/register" asChild>
+      <Text style={styles.buttonText}>GET STARTED</Text>
+        {/* <Pressable style={styles.button}       
         onPress={() => router.push('/sign-up')}>
-          <Text style={styles.buttonText}>GET STARTED</Text>
-        </Pressable>
+     
+        </Pressable> */}
       </Link>
     </View>
   );

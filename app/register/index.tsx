@@ -3,8 +3,10 @@ import { View, Text, TextInput, Pressable, StyleSheet } from 'react-native';
 import { Link, useRouter } from 'expo-router'; // Import useRouter for navigation
 import { FontAwesome } from '@expo/vector-icons'; // For Facebook icon
 import { AntDesign } from '@expo/vector-icons'; // For Google icon
-import { app } from "./firebaseConfig"; // Import your Firebase configuration
+//import { app } from "./firebaseConfig"; // Import your Firebase configuration
 import { getAuth, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from 'firebase/auth'; // Import Firebase authentication methods
+import { auth, database } from './firebaseConfig';
+import { doc, setDoc } from 'firebase/firestore';
 
 export default function SignUpScreen() {
   const auth = getAuth(app); // Initialize Firebase Authentication
@@ -22,14 +24,30 @@ export default function SignUpScreen() {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-      console.log('User signed up:', user);
+  
+      // console.log('✅ Firebase user created:', user.uid);
+  
+      const userData = {
+        uid: user.uid,
+        email: user.email,
+        fullName,
+        username,
+        createdAt: new Date().toISOString()
+      };
+  
+      // console.log('📦 Writing this to Firestore:', userData);
+  
+      await setDoc(doc(database, 'users', user.uid), userData);
+  
+      // console.log('✅ User document added to Firestore');
       setError('');
-      router.push('/sign-in'); // Navigate to the sign-in page after successful registration
+      router.push('/sign-in');
     } catch (error) {
-      console.error('Error signing up:', error);
+      console.error('🔥 Sign-up error:', error);
       setError('Failed to create an account. Please try again.');
     }
   };
+  
 
   // Function to handle Google sign-in
   const handleGoogleSignIn = async () => {
